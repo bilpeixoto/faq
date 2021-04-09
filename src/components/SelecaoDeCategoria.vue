@@ -10,9 +10,10 @@
   </div>
   <ul class="categories">
     <li
-      v-for="category in faqCategories"
+      v-for="category in $getCategories"
       :key="category.id"
       class="category-item"
+      v-on:click="goToNextPage(category.id)"
     >
       <img :src="require(`@/assets/images/${category.icon}`)" />
       {{ category.title }}
@@ -21,12 +22,18 @@
 </template>
 
 <script>
-import { faqCategories } from '@/utils/db.json'
-
 export default {
-  data() {
-    return {
-      faqCategories
+  computed: {
+    $getCategories() {
+      return this.$store.getters.$getCategories
+    }
+  },
+  methods: {
+    goToNextPage(selectedId) {
+      this.$store.dispatch('selectCategory', selectedId)
+    },
+    imprimir() {
+      console.log(this.$store.getters.$getNextPage)
     }
   }
 }
@@ -46,7 +53,7 @@ export default {
 }
 .categories {
   display: grid;
-  padding-bottom: 1.2rem;
+  padding-bottom: 0.7rem;
 }
 
 .category-item {

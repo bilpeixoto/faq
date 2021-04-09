@@ -1,17 +1,27 @@
 <template>
   <div class="container">
     <div class="box">
-      <EscolhaCategoria> </EscolhaCategoria>
+      <component :is="$getNextPage.page" />
     </div>
   </div>
 </template>
 
 <script>
-import EscolhaCategoria from '@/components/EscolhaCategoria.vue'
+import SelecaoDeCategoria from '@/components/SelecaoDeCategoria.vue'
+import SelecaoDePergunta from '@/components/SelecaoDePergunta.vue'
 
 export default {
+  computed: {
+    $getNextPage() {
+      return this.$store.getters.$getNextPage
+    }
+  },
   components: {
-    EscolhaCategoria
+    SelecaoDeCategoria,
+    SelecaoDePergunta
+  },
+  created() {
+    this.$store.dispatch('fetchCategories')
   }
 }
 </script>
@@ -36,12 +46,13 @@ h3 {
   width: 305px;
   height: 457px;
   background-image: linear-gradient(180deg, #3f4452, #26282c);
-  border-radius: 15px;
+  border-radius: 30px;
   display: grid;
+  align-content: start;
+  box-shadow: 0 8px 21px 3px rgb(0 0 0 / 30%);
   padding: 2rem 0.375rem;
   padding-bottom: 0.875rem;
 }
-
 * {
   box-sizing: border-box;
   padding: 0;
