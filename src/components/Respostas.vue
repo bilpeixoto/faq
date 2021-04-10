@@ -1,40 +1,30 @@
 <template>
-  <div class="heading">
-    <div class="btn-arrow" v-on:click="back()">
-      <img src="@/assets/images/arrow-left.svg" />
-    </div>
+  <div>
+    <div class="heading">
+      <div class="btn-arrow" v-on:click="back()">
+        <img src="@/assets/images/arrow-left.svg" />
+      </div>
 
-    <div class="heading-text">
-      <h1>{{ $getQuestions.title }}</h1>
-      <h3>Selecione uma pergunta</h3>
+      <div class="heading-text">
+        <h2>{{ $getAnswer.title }}</h2>
+      </div>
     </div>
-    <img
-      :src="require(`@/assets/images/${$getQuestions.icon}`)"
-      class="question-icon"
-    />
+    <div class="line"></div>
+    <div v-html="$getAnswer.content" class="answer"></div>
   </div>
-  <div class="line"></div>
-  <ul class="questions">
-    <li
-      v-for="question in $getQuestions.questions"
-      :key="question.id"
-      class="question-item"
-    >
-      {{ question.title }}
-    </li>
-  </ul>
 </template>
 
 <script>
 export default {
   methods: {
     back() {
+      this.$store.dispatch('decreaseTransitionDepth')
       this.$store.dispatch('back')
     }
   },
   computed: {
-    $getQuestions() {
-      return this.$store.getters.$getQuestions
+    $getAnswer() {
+      return this.$store.getters.$getAnswer
     }
   }
 }
@@ -43,10 +33,10 @@ export default {
 <style scoped>
 .heading {
   display: grid;
-  padding-bottom: 1em;
   padding-left: 1.4em;
+  padding-right: 1rem;
   grid-auto-flow: column;
-  grid-template-columns: auto 3fr 1fr;
+  grid-template-columns: auto 1fr;
   align-items: center;
   grid-gap: 0.6rem;
 }
@@ -56,9 +46,15 @@ export default {
   grid-template-rows: auto 1fr;
   grid-gap: 0.5rem;
 }
+
 .questions {
   display: grid;
   padding: 0.7rem;
+}
+
+.answer {
+  padding: 1.5rem;
+  font-size: 13px;
 }
 
 .question-item {

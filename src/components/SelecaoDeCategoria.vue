@@ -1,24 +1,26 @@
 <template>
-  <div class="heading">
-    <div class="heading-image">
-      <img src="@/assets/images/astronaut.svg" />
+  <div>
+    <div class="heading">
+      <div class="heading-image">
+        <img src="@/assets/images/astronaut.svg" />
+      </div>
+      <div class="heading-text">
+        <h1>Perguntas Frequentes</h1>
+        <h3>Escolha a categoria desejada</h3>
+      </div>
     </div>
-    <div class="heading-text">
-      <h1>Perguntas Frequentes</h1>
-      <h3>Escolha a categoria desejada</h3>
-    </div>
+    <ul class="categories">
+      <li
+        v-for="category in $getCategories"
+        :key="category.id"
+        class="category-item"
+        v-on:click="selectCategory(category.id)"
+      >
+        <img :src="require(`@/assets/images/${category.icon}`)" />
+        {{ category.title }}
+      </li>
+    </ul>
   </div>
-  <ul class="categories">
-    <li
-      v-for="category in $getCategories"
-      :key="category.id"
-      class="category-item"
-      v-on:click="goToNextPage(category.id)"
-    >
-      <img :src="require(`@/assets/images/${category.icon}`)" />
-      {{ category.title }}
-    </li>
-  </ul>
 </template>
 
 <script>
@@ -29,7 +31,8 @@ export default {
     }
   },
   methods: {
-    goToNextPage(selectedId) {
+    selectCategory(selectedId) {
+      this.$store.dispatch('increaseTransitionDepth')
       this.$store.dispatch('selectCategory', selectedId)
     },
     imprimir() {
@@ -61,7 +64,7 @@ export default {
   grid-template-columns: auto 1fr;
   grid-gap: 1.7rem;
   cursor: pointer;
-  transition: background-color 0.5s ease-in-out;
+  transition: background-color 0.3s ease-in-out;
   align-items: center;
   padding: 0.7em 1.5em;
   border-radius: 30px;

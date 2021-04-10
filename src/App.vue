@@ -1,7 +1,9 @@
 <template>
   <div class="container">
     <div class="box">
-      <component :is="$getNextPage.page" />
+      <transition class="slide" :name="transitionType" mode="out-in">
+        <component :is="$getNextPage" />
+      </transition>
     </div>
   </div>
 </template>
@@ -9,19 +11,39 @@
 <script>
 import SelecaoDeCategoria from '@/components/SelecaoDeCategoria.vue'
 import SelecaoDePergunta from '@/components/SelecaoDePergunta.vue'
+import Respostas from '@/components/Respostas.vue'
+import 'animate.css'
 
 export default {
-  computed: {
-    $getNextPage() {
-      return this.$store.getters.$getNextPage
-    }
-  },
   components: {
     SelecaoDeCategoria,
-    SelecaoDePergunta
+    SelecaoDePergunta,
+    Respostas
+  },
+  data() {
+    return {
+      transitionType: 'slide-left'
+    }
+  },
+  computed: {
+    $getNextPage() {
+      return this.$store.getters.$getNextPage.page
+    },
+    $transitionDepth() {
+      return this.$store.getters.$transitionDepth
+    }
   },
   created() {
     this.$store.dispatch('fetchCategories')
+  },
+  watch: {
+    $transitionDepth(newValue, oldValue) {
+      if (newValue > oldValue) {
+        this.transitionType = 'slide-left'
+      } else {
+        this.transitionType = 'slide-right'
+      }
+    }
   }
 }
 </script>
@@ -29,6 +51,9 @@ export default {
 <style>
 h1 {
   font-size: 20px;
+}
+h2 {
+  font-size: 16px;
 }
 h3 {
   font-size: 13px;
@@ -78,5 +103,41 @@ a {
   src: url('~@/assets/fonts/Lato-Bold.ttf');
   font-weight: 700;
   font-display: block;
+}
+.slide-left-enter-active,
+.slide-left-leave-active,
+.slide-right-enter-active,
+.slide-right-leave-active {
+  transition-duration: 0.3s;
+  transition-property: height, opacity, transform;
+  transition-timing-function: cubic-bezier(0.55, 0, 0.1, 1);
+  overflow: hidden;
+}
+.slide-left-enter,
+.slide-right-leave-active {
+  opacity: 0;
+  transform: translate(1.5em, 0);
+}
+.slide-left-leave-active,
+.slide-right-enter {
+  opacity: 0;
+  transform: translate(-1.5em, 0);
+}
+.slide-right-enter-active {
+  opacity: 0;
+  animation: fade 300ms ease;
+}
+.slide-left-enter-active {
+  opacity: 0;
+  animation: fade 300ms ease;
+}
+
+@keyframes fade {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 </style>

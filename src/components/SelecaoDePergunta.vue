@@ -1,35 +1,43 @@
 <template>
-  <div class="heading">
-    <div class="btn-arrow" v-on:click="back()">
-      <img src="@/assets/images/arrow-left.svg" />
-    </div>
+  <div>
+    <div class="heading">
+      <div class="btn-arrow" v-on:click="backToHome()">
+        <img src="@/assets/images/arrow-left.svg" />
+      </div>
 
-    <div class="heading-text">
-      <h1>{{ $getQuestions.title }}</h1>
-      <h3>Selecione uma pergunta</h3>
+      <div class="heading-text">
+        <h1>{{ $getQuestions.title }}</h1>
+        <h3>Selecione uma pergunta</h3>
+      </div>
+      <img
+        :src="require(`@/assets/images/${$getQuestions.icon}`)"
+        class="question-icon"
+      />
     </div>
-    <img
-      :src="require(`@/assets/images/${$getQuestions.icon}`)"
-      class="question-icon"
-    />
+    <div class="line"></div>
+    <ul class="questions">
+      <li
+        v-for="question in $getQuestions.questions"
+        :key="question.id"
+        class="question-item"
+        v-on:click="selectQuestion(question.id)"
+      >
+        {{ question.title }}
+      </li>
+    </ul>
   </div>
-  <div class="line"></div>
-  <ul class="questions">
-    <li
-      v-for="question in $getQuestions.questions"
-      :key="question.id"
-      class="question-item"
-    >
-      {{ question.title }}
-    </li>
-  </ul>
 </template>
 
 <script>
 export default {
   methods: {
-    back() {
-      this.$store.dispatch('back')
+    backToHome() {
+      this.$store.dispatch('decreaseTransitionDepth')
+      this.$store.dispatch('backToHome')
+    },
+    selectQuestion(idQuestion) {
+      this.$store.dispatch('increaseTransitionDepth')
+      this.$store.dispatch('selectQuestion', idQuestion)
     }
   },
   computed: {
@@ -66,7 +74,7 @@ export default {
   grid-template-columns: auto 1fr;
   grid-gap: 1.7rem;
   cursor: pointer;
-  transition: background-color 0.5s ease-in-out;
+  transition: background-color 0.3s ease-in-out;
   align-items: center;
   padding: 0.7em 1.5em;
   border-radius: 30px;
@@ -81,7 +89,7 @@ export default {
   cursor: pointer;
   background-color: transparent;
   border-radius: 8px;
-  transition: background-color 0.2s ease-in-out;
+  transition: background-color 0.3s ease-in-out;
   display: grid;
   justify-content: center;
   align-items: center;
